@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
+const request = require("request");
+const https = require("https");
+const res = require("express/lib/response");
 
 const app = express();
 
@@ -71,6 +74,53 @@ app.post("/compose", function(req, res){
     res.redirect("/");
 });
 
-app.listen(3000, function(req, res){
+app.post("/contact", function(req, res){
+    const firstName = req.body.fName;
+    const lastName = req.body.lName;
+    const email = req.body.email;
+    
+    const data = {
+        members: [
+            {
+                email_address: email,
+                status: "subscribed",
+                merge_fields: {
+                    FNAME: firstName,
+                    LNAME: lastName
+                }
+            }
+        ]
+    };
+
+    const jsonData = JSON.stringify(data);
+    const url = "https://us14.api.mailchimp.com/3.0/lists/3363cf9ac2";
+    const options = {
+        method: "POST",
+        auth: "sawan1:30dd9fa63f84e242cd12d888144e5d8b-us14"
+    };
+    
+    const request = https.request(url,options, function(response){
+        if(response.statusCode===200){
+            res.render("post", {
+                postTitle : "Awesome!",
+                Content : firstName + " " + lastName + ", we've recieved your query, we will get back to you soon!"
+            });
+        }
+        else{
+            res.render("post", {
+                postTitle : "Uh oh",
+                Content : firstName + " " + lastName + ", there is a problem, please try again or contact the developer!"
+            });
+        }
+        response.on("data", function(data){
+            console.log(JSON.parse(data));
+        });
+    });
+
+    request.write(jsonData);
+    request.end();
+});
+
+app.listen(process.env.PORT || 3000, function(req, res){
     console.log("Server is running");
 });

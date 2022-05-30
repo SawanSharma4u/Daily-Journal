@@ -8,11 +8,12 @@
         </h1>
         <div id="contact-container">
                 <div id="contact-form-container">
-                        <form id="contact-form">
-                                        <input id="input-name" name = "name" type="text" placeholder="Your Name">
-                                        <input id="input-email" name="input-email" type="text" required placeholder="Your Email">
-                                        <textarea id="input-message" name="input-message" rows="2" col=40 placeholder="Message"></textarea>
-                                        <button class="sub-btn" type="submit">SEND MESSAGE</button>
+                        <form id="contact-form" action="/contact" method="POST">
+                                <input id="input-name" name = "fName" type="text" placeholder="First Name" required autofocus>
+                                <input id="input-name" name = "lName" type="text" placeholder="Last Name">
+                                <input id="input-email" name="email" type="email" required placeholder="Your Email">
+                                
+                                <button class="sub-btn" type="submit">SEND MESSAGE</button>
                         </form>
                 </div>
     
